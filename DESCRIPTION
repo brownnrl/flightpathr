@@ -1,0 +1,11 @@
+Package: flightpathr
+Type: Package
+Title: Tools to Analyze Aircraft and Flight Path Data
+Version: 0.1.0
+Author@R: person("Eamon", "Caddigan", email = "eamon.caddigan@tgobrien.com",
+    role = c("aut", "cre"))
+Description: This package provides functions for analyzing flight track and
+    flight path data. Useful for studies of pilot and controller performance.
+License: MIT
+LazyData: TRUE
+RoxygenNote: 5.0.1
