@@ -9,3 +9,8 @@ Description: This package provides functions for analyzing flight track and
 License: MIT
 LazyData: TRUE
 RoxygenNote: 5.0.1
+Imports: 
+    geosphere
+Suggests: 
+    sp,
+    testthat
