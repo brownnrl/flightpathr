@@ -18,8 +18,10 @@ distanceFromPath <- function(trajectory, path) {
   numLegs <- nrow(pathCoords)-1
 
   # Given n points and m legs, store horizontal and vertical distance in an
-  # n x m x 2 array
-  distanceToLeg <- array(NA, dim = c(nrow(trajectory), 2, numLegs))
+  # n x m arrays
+  hDistanceToLeg <- array(NA, dim = c(nrow(trajectoryCoords), numLegs))
+  vDistanceToLeg <- array(NA, dim = c(nrow(trajectoryCoords), numLegs))
+
   # And the squared "slant range" (euclidean distance) in an n x m array
   slantToLeg <- array(NA, dim = c(nrow(trajectoryCoords), numLegs))
 
@@ -27,21 +29,21 @@ distanceFromPath <- function(trajectory, path) {
     # For each pair of adjascent waypoints, calculate the horizontal distance
     # from the great circle defined by the pair and all points in the
     # trajectory.
-    distanceToLeg[, i, 1] <- geosphere::dist2gc(path[i, c(1,2)],
-                                                path[i+1, c(1,2)],
-                                                trajectory[, c(1,2)],
-                                                r = 2.0904e+7)
+    hDistanceToLeg[, legIdx] <- geosphere::dist2gc(pathCoords[legIdx, c(1,2)],
+                                              pathCoords[legIdx+1, c(1,2)],
+                                              trajectoryCoords[, c(1,2)],
+                                              r = 2.0904e+7)
 
     # If the waypoints are at the same altitude, just calculate the deviation
     # from this altitude. Easy.
     # XXX - Not actually handling the case where they don't match.
-    if (!isTRUE(all.equal(altitudes(path[i]), altitudes(path[i+1])))) {
+    if (!isTRUE(all.equal(pathCoords[legIdx, 3], pathCoords[legIdx+1, 3]))) {
       warning("Pretending that waypoint altitudes match when they don't")
     }
-    distanceToLeg[, i, 2] <- trajectory[, 3] - path[i, 3]
+    vDistanceToLeg[, legIdx] <- trajectoryCoords[, 3] - pathCoords[legIdx, 3]
 
     # Squared euclidean distance
-    slantToLeg[, i] <- distanceToLeg[, i, 1]^2 + distanceToLeg[, i, 2]^2
+    slantToLeg[, legIdx] <- hDistanceToLeg[, legIdx]^2 + vDistanceToLeg[, legIdx]^2
   }
 
   # Figure out which leg is closer to each point in the trajectory.
@@ -51,7 +53,7 @@ distanceFromPath <- function(trajectory, path) {
 
   # Return the horizontal and vertical distance to the flight path (distance to
   # the closest leg) as a data.frame.
-  distanceToPath <- as.data.frame(drop(distanceToLeg[, closestLeg, ]))
-  colnames(distanceToPath) <- c("horizontal", "vertical")
+  distanceToPath <- data.frame(horizontal = hDistanceToLeg[cbind(1:nrow(trajectoryCoords), closestLeg)],
+                               vertical = vDistanceToLeg[cbind(1:nrow(trajectoryCoords), closestLeg)])
   return(distanceToPath)
 }
