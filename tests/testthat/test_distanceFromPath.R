@@ -44,3 +44,21 @@ test_that("small deviations look OK", {
   # left of course
   expect_lt(trajectoryDistance[farthestPoint], 0)
 })
+
+test_that("simple altitude deviation is handled", {
+  flownPath1 <- cbind(path, alt = 3500)
+  flownPath2 <- cbind(path, alt = c(3500, 4500, 3500))
+  flownPath3 <- cbind(path, alt = c(3500, 5500, 3500))
+  flownTrajectory <- cbind(fakeTrajectory(path),
+                           alt = c(seq(3500, 5500, length.out = numPoints+2),
+                                   seq(5500, 3500,
+                                       length.out = nrow(trajectory)-(numPoints+2))))
+
+
+  expect_equal(max(distanceFromPath(flownTrajectory, flownPath1)$vertical),
+               2000.0)
+  expect_equal(max(distanceFromPath(flownTrajectory, flownPath2)$vertical),
+               1000.0)
+  expect_equal(max(distanceFromPath(flownTrajectory, flownPath3)$vertical),
+               0)
+})

@@ -36,11 +36,15 @@ distanceFromPath <- function(trajectory, path) {
 
     # If the waypoints are at the same altitude, just calculate the deviation
     # from this altitude. Easy.
-    # XXX - Not actually handling the case where they don't match.
-    if (!isTRUE(all.equal(pathCoords[legIdx, 3], pathCoords[legIdx+1, 3]))) {
-      warning("Pretending that waypoint altitudes match when they don't")
+    if (isTRUE(all.equal(pathCoords[legIdx, 3], pathCoords[legIdx+1, 3]))) {
+      vDistanceToLeg[, legIdx] <- trajectoryCoords[, 3] - pathCoords[legIdx, 3]
+    } else {
+      vDistanceToLeg[, legIdx] <- 0
+      deviationAbove <- trajectoryCoords[, 3] - max(pathCoords[c(legIdx, legIdx+1), 3])
+      deviationBelow <- trajectoryCoords[, 3] - min(pathCoords[c(legIdx, legIdx+1), 3])
+      vDistanceToLeg[deviationAbove > 0, legIdx] <- deviationAbove[deviationAbove > 0]
+      vDistanceToLeg[deviationBelow < 0, legIdx] <- deviationBelow[deviationBelow > 0]
     }
-    vDistanceToLeg[, legIdx] <- trajectoryCoords[, 3] - pathCoords[legIdx, 3]
 
     # Squared euclidean distance
     slantToLeg[, legIdx] <- hDistanceToLeg[, legIdx]^2 + vDistanceToLeg[, legIdx]^2
