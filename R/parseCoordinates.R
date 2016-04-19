@@ -15,7 +15,7 @@ parseCoordinates <- function(coord) {
   # Get the direction
   direction <- gsub("[^NSEWnsew]", "", coord)
   direction[is.na(direction) | nchar(direction) == 0] <- "1"
-  direction <- unname(vapply(direction, switch, numeric(1), S = -1, E = -1, 1))
+  direction <- unname(vapply(direction, switch, numeric(1), S = -1, W = -1, 1))
 
   # Continue parsing the coord
   coord <- gsub("[^[:digit:][:punct:]]", "", coord)
