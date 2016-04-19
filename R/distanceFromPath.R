@@ -32,7 +32,7 @@ distanceFromPath <- function(trajectory, path) {
     hDistanceToLeg[, legIdx] <- geosphere::dist2gc(pathCoords[legIdx, c(1,2)],
                                               pathCoords[legIdx+1, c(1,2)],
                                               trajectoryCoords[, c(1,2)],
-                                              r = 2.0904e+7)
+                                              r = 20925646)
 
     # If the waypoints are at the same altitude, just calculate the deviation
     # from this altitude. Easy.
