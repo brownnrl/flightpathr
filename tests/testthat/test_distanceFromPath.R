@@ -51,6 +51,7 @@ test_that("simple altitude deviation is handled", {
   flownPath1 <- cbind(path, alt = 3500)
   flownPath2 <- cbind(path, alt = c(3500, 4500, 3500))
   flownPath3 <- cbind(path, alt = c(3500, 5500, 3500))
+  flownPath4 <- cbind(path, alt = c(3500, 5500, 5500))
   flownTrajectory <- cbind(fakeTrajectory(path),
                            alt = c(seq(3500, 5500, length.out = numPoints+2),
                                    seq(5500, 3500,
@@ -61,6 +62,8 @@ test_that("simple altitude deviation is handled", {
   expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath2)["vertical"] - 1000),
             distancePrecision)
   expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath3)["vertical"] - 0000),
+            distancePrecision)
+  expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath4)["vertical"] - -2000),
             distancePrecision)
 })
 

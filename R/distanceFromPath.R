@@ -43,7 +43,7 @@ distanceFromPath <- function(trajectory, path) {
       deviationAbove <- trajectoryCoords[, 3] - max(pathCoords[c(legIdx, legIdx+1), 3])
       deviationBelow <- trajectoryCoords[, 3] - min(pathCoords[c(legIdx, legIdx+1), 3])
       vDistanceToLeg[deviationAbove > 0, legIdx] <- deviationAbove[deviationAbove > 0]
-      vDistanceToLeg[deviationBelow < 0, legIdx] <- deviationBelow[deviationBelow > 0]
+      vDistanceToLeg[deviationBelow < 0, legIdx] <- deviationBelow[deviationBelow < 0]
     }
 
     # Squared euclidean distance
