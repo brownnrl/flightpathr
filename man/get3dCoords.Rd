@@ -10,7 +10,7 @@ get3dCoords(obj)
 \item{obj}{An object that hopefully contains some coordinates.}
 }
 \value{
-A nx3 coordinate matrix
+A nx3 coordinate matrix. Should be longitude/latitude/altitude.
 }
 \description{
 Checks for appropriate input and coerces it into a nx3 coordinate matrix.
