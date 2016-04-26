@@ -1,7 +1,7 @@
 #' Checks for appropriate input and coerces it into a nx3 coordinate matrix.
 #'
 #' @param obj An object that hopefully contains some coordinates.
-#' @return A nx3 coordinate matrix
+#' @return A nx3 coordinate matrix. Should be longitude/latitude/altitude.
 get3dCoords <- function(obj) {
   # Get/check for a matrix representation
   if (is(obj, "SpatialPoints")) {
