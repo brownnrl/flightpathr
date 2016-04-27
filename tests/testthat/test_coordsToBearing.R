@@ -1,6 +1,10 @@
 library(flightpathr)
 context("coordsToBearing")
 
+test_that("Input checking works", {
+  expect_error(coordsToBearing(matrix(c(-74.577166, 39.457583), nrow = 1)))
+})
+
 test_that("Equatorial routes have constant bearing", {
   trajectory1 <- cbind(longitude = seq(-180, 180, length.out = 100),
                        latitude = 0)

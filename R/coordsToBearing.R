@@ -9,8 +9,12 @@
 #' @export
 coordsToBearing <- function(trajectory) {
   trajectoryCoords <- get3dCoords(trajectory)
-  numCoords <- nrow(trajectoryCoords)
-  bearings <- geosphere::bearing(trajectoryCoords[1:(numCoords-1), 1:2],
-                                 trajectoryCoords[2:numCoords, 1:2])
+  numPoints <- nrow(trajectoryCoords)
+  if (numPoints < 2) {
+    stop("At least two time points must be specified")
+  }
+
+  bearings <- geosphere::bearing(trajectoryCoords[1:(numPoints-1), 1:2],
+                                 trajectoryCoords[2:numPoints, 1:2])
   return(c(bearings, NA))
 }
