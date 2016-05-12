@@ -1,0 +1,3 @@
+library(flightpathr)
+context("identifyManeuvers")
+
