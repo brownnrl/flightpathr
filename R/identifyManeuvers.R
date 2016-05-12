@@ -3,15 +3,15 @@
 #'
 #' @param trajectory A matrix or SpatialPoints object indicating the trajectory
 #'   of an aircraft.
-#' @param hiThresh A heading change (in degrees); any time point associated with
-#'   a change in heading greater than this value will definitely be labeled a
+#' @param hiThresh A bearing change (in degrees); any time point associated with
+#'   a change in bearing greater than this value will definitely be labeled a
 #'   turn.
 #'
 #' @return A logical vector indicating whether each timepoint can be considered
 #'   a turn.
 #'
 #' @export
-identifyHeadingChanges <- function(trajectory, hiThresh) {
+identifyBearingChanges <- function(trajectory, hiThresh) {
   bearings <- coordsToBearing(trajectory)
 
   bearings[length(bearings)] <- bearings[length(bearings)-1]

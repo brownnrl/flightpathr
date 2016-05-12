@@ -3,6 +3,6 @@
 export(coordsToBearing)
 export(distanceFromPath)
 export(identifyAltitudeChanges)
-export(identifyHeadingChanges)
+export(identifyBearingChanges)
 export(maxDistanceFromPath)
 export(parseCoordinates)
