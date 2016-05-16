@@ -16,5 +16,12 @@ coordsToBearing <- function(trajectory) {
 
   bearings <- geosphere::bearing(trajectoryCoords[1:(numPoints-1), 1:2],
                                  trajectoryCoords[2:numPoints, 1:2])
+
+  # If successive points have the SAME lon/lat, geosphere::bearing() produces
+  # meaningless output. Set these to NAs.
+  distancesMeters <- geosphere::distHaversine(trajectoryCoords[1:(numPoints-1), 1:2],
+                                              trajectoryCoords[2:numPoints, 1:2])
+  bearings[distancesMeters < 1e-4] <- NA
+
   return(c(bearings, NA))
 }

@@ -40,3 +40,11 @@ test_that("Trajectories are somewhat reversable", {
 
   expect_equal(destPoints[1:200], trajectory[1:200], tolerance = 1e-8)
 })
+
+test_that("Repeated long/lats are handled correctly", {
+  trajectory <- geosphere::gcIntermediate(c(-119.841499, 34.426194),
+                                          c(-74.577166, 39.457583),
+                                          100)
+  trajectory <- rbind(trajectory, trajectory[100, ], trajectory[100, ])
+  expect_true(all(is.na(coordsToBearing(trajectory)[c(100, 101)])))
+})
