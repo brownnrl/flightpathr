@@ -1,4 +1,4 @@
-library(flightconflicts)
+library(flightpathr)
 context("interpolateTrajectory")
 
 library(geosphere)
@@ -17,7 +17,7 @@ trajectory2 <-createTrajectory(coords2[, 1], coords2[, 2], altitude = 3500,
 test_that("Interpolated trajectory is close to correct", {
   trajectoryInterpolated <- interpolateTrajectory(trajectory1,
                                                   trajectory2$timestamp)
-  
+
   for (tf in names(trajectoryInterpolated)) {
     expect_equal(trajectoryInterpolated[[tf]], trajectory2[[tf]], tolerance = 1)
   }
@@ -26,7 +26,7 @@ test_that("Interpolated trajectory is close to correct", {
 test_that("Correctly handling times outside original range", {
   trajectoryInterpolated <- interpolateTrajectory(trajectory1,
                                                   c(-100, 0, 800, 900))
-  
+
   for (tf in names(trajectoryInterpolated)[names(trajectoryInterpolated) != "timestamp"]) {
     expect_equal(trajectoryInterpolated[[tf]][1], trajectoryInterpolated[[tf]][2])
     expect_equal(trajectoryInterpolated[[tf]][3], trajectoryInterpolated[[tf]][4])
