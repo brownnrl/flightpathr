@@ -25,3 +25,12 @@ coordsToBearing <- function(trajectory) {
 
   return(c(bearings, NA))
 }
+
+#' Calculate the signed difference between angles (in degrees)
+#'
+#' @param angle1 Source angle
+#' @param angle2 Target angle
+#' @return The signed difference between the two angles
+angleDiff <- function(angle1, angle2) {
+  return(((angle2 - angle1) + 180) %% 360 - 180)
+}

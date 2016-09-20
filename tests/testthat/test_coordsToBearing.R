@@ -11,8 +11,10 @@ test_that("Equatorial routes have constant bearing", {
   trajectory2 <- cbind(longitude = -74.6,
                        latitude = seq(89, -89, length.out = 100))
 
-  expect_equal(coordsToBearing(trajectory1), c(rep(90, 99), NA))
-  expect_equal(coordsToBearing(trajectory2), c(rep(180, 99), NA))
+  expect_equal(angleDiff(coordsToBearing(trajectory1), rep(90, 100)),
+               c(rep(0, 99), NA))
+  expect_equal(angleDiff(coordsToBearing(trajectory2), rep(180, 100)),
+               c(rep(0, 99), NA))
 })
 
 test_that("Non-equatorial routes look OK", {
