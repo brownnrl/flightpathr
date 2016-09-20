@@ -41,7 +41,7 @@ test_that("small deviations look OK", {
 
   expect_equal(farthestPoint, numPoints*2+3)
 
-  expect_lt(abs(maxDistanceFromPath(flownTrajectory, path)["horizontal"] - -42015.6),
+  expect_lt(abs(maxDistanceFromPath(flownTrajectory, path)["horizontal"] - 42015.6),
             distancePrecision)
   expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath)["horizontal"] - 0),
             distancePrecision)
@@ -76,6 +76,6 @@ test_that("reproducing geosphere vignette example", {
   feetToMeters <- 0.3048
 
   expect_lt(abs(maxDistanceFromPath(flownTrajectory, plannedPath)["horizontal"]*feetToMeters -
-                  -547448.8),
+                  547448.8),
             1)
 })
