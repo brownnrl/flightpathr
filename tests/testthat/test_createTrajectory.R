@@ -45,3 +45,8 @@ test_that("Input lengths are checked", {
   expect_equal(createTrajectory(trajectoryMat[, "lon"], trajectoryMat[, "lat"], 2500)$altitude,
                rep(2500, timeSec))
 })
+
+test_that("Trajectories are identified", {
+  expect_true(is.flighttrajectory(trajectory))
+  expect_false(is.flighttrajectory(trajectoryMat))
+})
