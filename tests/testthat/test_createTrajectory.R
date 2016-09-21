@@ -26,3 +26,22 @@ test_that("Bearing and groundspeed calculations are correct", {
   expect_equal(trajectory$bearing[1:(timeSec-1)],
                bearing(trajectoryMat[1:(timeSec-1), ], trajectoryMat[2:timeSec, ]))
 })
+
+test_that("Input types are checked", {
+  expect_error(createTrajectory(paste(trajectoryMat[, "lon"]), trajectoryMat[, "lat"]),
+               "\"longitude\" must be a numeric vector")
+  expect_error(createTrajectory(trajectoryMat[, "lon"], paste(trajectoryMat[, "lat"])),
+               "\"latitude\" must be a numeric vector")
+  expect_error(createTrajectory(trajectoryMat[, "lon"], trajectoryMat[, "lat"], paste(rep(2500, timeSec))),
+               "\"altitude\" must be a numeric vector")
+})
+
+test_that("Input lengths are checked", {
+  expect_error(createTrajectory(trajectoryMat[, "lon"], trajectoryMat[1, "lat"]),
+               paste("Vector \"latitude\" has length = 1, expected length =", timeSec))
+  # Altitude can have length of 1 or timeSec, otherwise there should be an error
+  expect_error(createTrajectory(trajectoryMat[, "lon"], trajectoryMat[, "lat"], rep(2500, 2)),
+               paste("Vector \"altitude\" has length = 2, expected length =", timeSec))
+  expect_equal(createTrajectory(trajectoryMat[, "lon"], trajectoryMat[, "lat"], 2500)$altitude,
+               rep(2500, timeSec))
+})
