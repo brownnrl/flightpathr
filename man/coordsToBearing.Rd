@@ -2,13 +2,14 @@
 % Please edit documentation in R/coordsToBearing.R
 \name{coordsToBearing}
 \alias{coordsToBearing}
-\title{Calculate the bearing between successive points in a trajectory.}
+\title{Calculate the bearing between successive longitude/latitude points.}
 \usage{
-coordsToBearing(trajectory)
+coordsToBearing(longitude, latitude)
 }
 \arguments{
-\item{trajectory}{A matrix or SpatialPoints object indicating the trajectory
-of an aircraft.}
+\item{longitude}{Latitude values.}
+
+\item{latitude}{Longitude values.}
 }
 \value{
 The numeric vecotor giving the instantaneious bearing at each point
@@ -16,6 +17,6 @@ The numeric vecotor giving the instantaneious bearing at each point
   trajectory, but the last element will be \code{NA}.
 }
 \description{
-Calculate the bearing between successive points in a trajectory.
+Calculate the bearing between successive longitude/latitude points.
 }
 
