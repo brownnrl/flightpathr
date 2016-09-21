@@ -56,7 +56,7 @@ createTrajectory <- function(longitude, latitude, altitude = 0, timestamp = NULL
   # Use flightpathr to calculate bearing between successive points if not
   # specified.
   if (is.null(bearing)) {
-    bearing <- coordsToBearing(cbind(coords, altitude))
+    bearing <- coordsToBearing(longitude, latitude)
     bearing[nCoord] <- bearing[nCoord-1]
   } else {
     checkLength(bearing)
