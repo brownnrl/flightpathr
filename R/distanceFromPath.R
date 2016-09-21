@@ -1,9 +1,9 @@
 #' Calculate the distance of a flight trajectory from a flight path.
 #'
-#' @param trajectory A matrix or SpatialPoints object indicating the trajectory
+#' @param trajectory A \code{flighttrajectory} object indicating the trajectory
 #'   of an aircraft.
-#' @param path A matrix or SpatialPoints object indicating the ordered waypoints
-#'   a pre-defined flight path.
+#' @param path A \code{flightpath} object indicating the ordered waypoints a
+#'   pre-defined flight path.
 #' @return A data.frame containing two columns representing the distance between
 #'   the aircraft and its planned flight path (in feet): \code{horizontal}
 #'   indicates the horizontal distance and \code{vertical} indicates the

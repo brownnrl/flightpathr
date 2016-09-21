@@ -1,3 +1,5 @@
+# TODO: Handle NA altitudes in flightpaths.
+
 library(flightpathr)
 context("distanceFromPath")
 
@@ -5,77 +7,91 @@ distancePrecision <- 10
 numPoints <- 5
 
 fakeTrajectory <- function(waypoints, n = numPoints) {
-  trajectoryList <- vector("list", 2*nrow(waypoints)-1)
-  trajectoryList[[1]] <- waypoints[1, ]
+  coordList <- vector("list", 2*nrow(waypoints)-1)
+  coordList[[1]] <- waypoints[1, ]
   for (i in seq(2, nrow(waypoints))) {
-    trajectoryList[[(i-1)*2]] <- geosphere::gcIntermediate(waypoints[i-1, ],
+    coordList[[(i-1)*2]] <- geosphere::gcIntermediate(waypoints[i-1, ],
                                                            waypoints[i, ], n)
-    trajectoryList[[(i-1)*2+1]] <- waypoints[i, ]
+    coordList[[(i-1)*2+1]] <- waypoints[i, ]
   }
-  return(do.call(rbind, trajectoryList))
+  coordMat <- do.call(rbind, coordList)
+  return(createTrajectory(longitude = coordMat[, "lon"],
+                          latitude = coordMat[, "lat"],
+                          altitude = 0))
 }
 
 # Flying from 17N to KACY with a stop over N81. Flying VFR at 3500 msl
-path <- matrix(c(-75.0268, 39.7065,
+pathMat <- matrix(c(-75.0268, 39.7065,
                  -74.7577, 39.6675,
                  -74.5722, 39.4513),
                nrow = 3, byrow = TRUE,
                dimnames = list(c("17N", "N81", "KACY"),
                                c("lon", "lat")))
-trajectory <- fakeTrajectory(path)
+path <- createPath(longitude = pathMat[, "lon"], latitude = pathMat[, "lat"],
+                   altitude = 0)
+trajectory <- fakeTrajectory(pathMat)
+trajectoryLength <- length(trajectory$longitude)
 
 test_that("non-deviating paths have small distances for all input types", {
-  expect_true(all(distanceFromPath(trajectory, path) < distancePrecision))
-  expect_true(all(distanceFromPath(cbind(trajectory, 3500), cbind(path, 3500)) < distancePrecision))
-  expect_true(all(distanceFromPath(sp::SpatialPoints(trajectory), sp::SpatialPoints(path)) < distancePrecision))
-  expect_true(all(distanceFromPath(as.data.frame(trajectory), as.data.frame(path)) < distancePrecision))
+  expect_equal(distanceFromPath(trajectory, path)$horizontal,
+               rep(0, trajectoryLength),
+               tolerance = 1)
+  # Leaving these here but commented-out. I'd like to be able to accept multiple
+  # input types again later, but it's a low priority.
+
+  # expect_true(all(distanceFromPath(cbind(trajectory, 3500), cbind(path, 3500)) < distancePrecision))
+  # expect_true(all(distanceFromPath(sp::SpatialPoints(trajectory), sp::SpatialPoints(path)) < distancePrecision))
+  # expect_true(all(distanceFromPath(as.data.frame(trajectory), as.data.frame(path)) < distancePrecision))
 })
 
 test_that("small deviations look OK", {
-  flownPath <- rbind(path[1:2, ],
+  flownPathMat <- rbind(pathMat[1:2, ],
                      KORDE = c(-74.0948, 39.0976),
-                     path[3, , drop = FALSE])
-  flownTrajectory <- fakeTrajectory(flownPath)
+                     pathMat[3, , drop = FALSE])
+  flownTrajectory <- fakeTrajectory(flownPathMat)
+  flownPath <- createPath(flownPathMat[, 1], flownPathMat[, 2], 0)
   trajectoryDistance <- distanceFromPath(flownTrajectory, path)$horizontal
   farthestPoint <- which.max(abs(trajectoryDistance))
 
   expect_equal(farthestPoint, numPoints*2+3)
-
-  expect_lt(abs(maxDistanceFromPath(flownTrajectory, path)["horizontal"] - 42015.6),
-            distancePrecision)
-  expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath)["horizontal"] - 0),
-            distancePrecision)
+  expect_equal(maxDistanceFromPath(flownTrajectory, path)["horizontal"],
+               c(horizontal = 42015.6),
+               tolerance = 1)
+  expect_equal(maxDistanceFromPath(flownTrajectory, flownPath)["horizontal"],
+               c(horizontal = 0),
+               tolerance = 1)
 })
 
-test_that("simple altitude deviation is handled", {
-  flownPath1 <- cbind(path, alt = 3500)
-  flownPath2 <- cbind(path, alt = c(3500, 4500, 3500))
-  flownPath3 <- cbind(path, alt = c(3500, 5500, 3500))
-  flownPath4 <- cbind(path, alt = c(3500, 5500, 5500))
-  flownTrajectory <- cbind(fakeTrajectory(path),
-                           alt = c(seq(3500, 5500, length.out = numPoints+2),
-                                   seq(5500, 3500,
-                                       length.out = nrow(trajectory)-(numPoints+2))))
-
-  expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath1)["vertical"] - 2000),
-            distancePrecision)
-  expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath2)["vertical"] - 1000),
-            distancePrecision)
-  expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath3)["vertical"] - 0000),
-            distancePrecision)
-  expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath4)["vertical"] - -2000),
-            distancePrecision)
-})
-
+# test_that("simple altitude deviation is handled", {
+#   flownPath1 <- cbind(path, alt = 3500)
+#   flownPath2 <- cbind(path, alt = c(3500, 4500, 3500))
+#   flownPath3 <- cbind(path, alt = c(3500, 5500, 3500))
+#   flownPath4 <- cbind(path, alt = c(3500, 5500, 5500))
+#   flownTrajectory <- cbind(fakeTrajectory(path),
+#                            alt = c(seq(3500, 5500, length.out = numPoints+2),
+#                                    seq(5500, 3500,
+#                                        length.out = nrow(trajectory)-(numPoints+2))))
+#
+#   expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath1)["vertical"] - 2000),
+#             distancePrecision)
+#   expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath2)["vertical"] - 1000),
+#             distancePrecision)
+#   expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath3)["vertical"] - 0000),
+#             distancePrecision)
+#   expect_lt(abs(maxDistanceFromPath(flownTrajectory, flownPath4)["vertical"] - -2000),
+#             distancePrecision)
+# })
+#
 test_that("reproducing geosphere vignette example", {
   LA <- c(-118.40, 33.95)
   NY <- c(-73.78, 40.63)
   MS <- c(-93.26, 44.98)
-  plannedPath <- rbind(LA, NY)
   flownTrajectory <- fakeTrajectory(rbind(LA, MS, NY), n = 1000)
+  plannedPathMat <- rbind(LA, NY)
+  plannedPath <- createPath(plannedPathMat[, 1], plannedPathMat[, 2], 0)
   feetToMeters <- 0.3048
 
-  expect_lt(abs(maxDistanceFromPath(flownTrajectory, plannedPath)["horizontal"]*feetToMeters -
-                  547448.8),
-            1)
+  expect_equal(maxDistanceFromPath(flownTrajectory, plannedPath)["horizontal"]*feetToMeters,
+               c("horizontal" = 547448.8),
+               tolerance = 1)
 })

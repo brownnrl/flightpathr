@@ -7,11 +7,11 @@
 distanceFromPath(trajectory, path)
 }
 \arguments{
-\item{trajectory}{A matrix or SpatialPoints object indicating the trajectory
+\item{trajectory}{A \code{flighttrajectory} object indicating the trajectory
 of an aircraft.}
 
-\item{path}{A matrix or SpatialPoints object indicating the ordered waypoints
-a pre-defined flight path.}
+\item{path}{A \code{flightpath} object indicating the ordered waypoints a
+pre-defined flight path.}
 }
 \value{
 A data.frame containing two columns representing the distance between
