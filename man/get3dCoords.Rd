@@ -2,17 +2,23 @@
 % Please edit documentation in R/get3dCoords.R
 \name{get3dCoords}
 \alias{get3dCoords}
-\title{Checks for appropriate input and coerces it into a nx3 coordinate matrix.}
+\title{Checks for a \code{flighttrajectory} or \code{flightpath} object and returns
+it's position in a 3D matrix.}
 \usage{
-get3dCoords(obj)
+get3dCoords(coordObject)
 }
 \arguments{
-\item{obj}{An object that hopefully contains some coordinates.}
+\item{coordObject}{An object that hopefully contains some coordinates.}
 }
 \value{
-A nx3 coordinate matrix. Should be longitude/latitude/altitude.
+A nx3 coordinate matrix giving longitude/latitude/altitude.
 }
 \description{
-Checks for appropriate input and coerces it into a nx3 coordinate matrix.
+Checks for a \code{flighttrajectory} or \code{flightpath} object and returns
+it's position in a 3D matrix.
+}
+\details{
+It'll be safer to access \code{flighttrajectory} and
+  \code{flightpath} objects' coordinates through this.
 }
 
