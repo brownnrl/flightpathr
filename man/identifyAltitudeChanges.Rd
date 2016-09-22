@@ -8,8 +8,8 @@ altitude.}
 identifyAltitudeChanges(trajectory, hiThresh)
 }
 \arguments{
-\item{trajectory}{A matrix or SpatialPoints object indicating the trajectory
-of an aircraft.}
+\item{trajectory}{A \code{flighttrajectory} object (or input coercable to
+one) indicating the trajectory of an aircraft.}
 
 \item{hiThresh}{An altitude change (in feet); any time point associated with
 a change in altitude greater than this value will definitely be labeled a

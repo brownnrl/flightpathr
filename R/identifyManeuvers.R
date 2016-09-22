@@ -1,8 +1,8 @@
 #' Identify the timepoints in a trajectory that correspond to a change in
 #' commanded heading.
 #'
-#' @param trajectory A matrix or SpatialPoints object indicating the trajectory
-#'   of an aircraft.
+#' @param trajectory A \code{flighttrajectory} object (or input coercable to
+#'   one) indicating the trajectory of an aircraft.
 #' @param hiThresh A bearing change (in degrees); any time point associated with
 #'   a change in bearing greater than this value will definitely be labeled a
 #'   turn.
@@ -26,8 +26,8 @@ identifyBearingChanges <- function(trajectory, hiThresh) {
 #' Identify the timepoints in a trajectory that correspond to a change in
 #' altitude.
 #'
-#' @param trajectory A matrix or SpatialPoints object indicating the trajectory
-#'   of an aircraft.
+#' @param trajectory A \code{flighttrajectory} object (or input coercable to
+#'   one) indicating the trajectory of an aircraft.
 #' @param hiThresh An altitude change (in feet); any time point associated with
 #'   a change in altitude greater than this value will definitely be labeled a
 #'   climb or descent.

@@ -8,8 +8,8 @@ commanded heading.}
 identifyBearingChanges(trajectory, hiThresh)
 }
 \arguments{
-\item{trajectory}{A matrix or SpatialPoints object indicating the trajectory
-of an aircraft.}
+\item{trajectory}{A \code{flighttrajectory} object (or input coercable to
+one) indicating the trajectory of an aircraft.}
 
 \item{hiThresh}{A bearing change (in degrees); any time point associated with
 a change in bearing greater than this value will definitely be labeled a
