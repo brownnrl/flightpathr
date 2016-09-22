@@ -1,9 +1,6 @@
-# TODO: Handle NA altitudes in flightpaths.
-
 library(flightpathr)
 context("distanceFromPath")
 
-distancePrecision <- 10
 numPoints <- 5
 
 fakeTrajectory <- function(waypoints, n = numPoints) {
@@ -11,7 +8,7 @@ fakeTrajectory <- function(waypoints, n = numPoints) {
   coordList[[1]] <- waypoints[1, ]
   for (i in seq(2, nrow(waypoints))) {
     coordList[[(i-1)*2]] <- geosphere::gcIntermediate(waypoints[i-1, ],
-                                                           waypoints[i, ], n)
+                                                      waypoints[i, ], n)
     coordList[[(i-1)*2+1]] <- waypoints[i, ]
   }
   coordMat <- do.call(rbind, coordList)
@@ -22,13 +19,12 @@ fakeTrajectory <- function(waypoints, n = numPoints) {
 
 # Flying from 17N to KACY with a stop over N81. Flying VFR at 3500 msl
 pathMat <- matrix(c(-75.0268, 39.7065,
-                 -74.7577, 39.6675,
-                 -74.5722, 39.4513),
-               nrow = 3, byrow = TRUE,
-               dimnames = list(c("17N", "N81", "KACY"),
-                               c("lon", "lat")))
-path <- createPath(longitude = pathMat[, "lon"], latitude = pathMat[, "lat"],
-                   altitude = 0)
+                    -74.7577, 39.6675,
+                    -74.5722, 39.4513),
+                  nrow = 3, byrow = TRUE,
+                  dimnames = list(c("17N", "N81", "KACY"),
+                                  c("lon", "lat")))
+path <- createPath(longitude = pathMat[, "lon"], latitude = pathMat[, "lat"])
 trajectory <- fakeTrajectory(pathMat)
 trajectoryLength <- length(trajectory$longitude)
 
@@ -44,12 +40,12 @@ test_that("non-deviating paths have small distances for all input types", {
   # expect_true(all(distanceFromPath(as.data.frame(trajectory), as.data.frame(path)) < distancePrecision))
 })
 
-test_that("small deviations look OK", {
+test_that("small horizontal deviations look OK", {
   flownPathMat <- rbind(pathMat[1:2, ],
-                     KORDE = c(-74.0948, 39.0976),
-                     pathMat[3, , drop = FALSE])
+                        KORDE = c(-74.0948, 39.0976),
+                        pathMat[3, , drop = FALSE])
   flownTrajectory <- fakeTrajectory(flownPathMat)
-  flownPath <- createPath(flownPathMat[, 1], flownPathMat[, 2], 0)
+  flownPath <- createPath(flownPathMat[, 1], flownPathMat[, 2])
   trajectoryDistance <- distanceFromPath(flownTrajectory, path)$horizontal
   farthestPoint <- which.max(abs(trajectoryDistance))
 
