@@ -1,9 +1,9 @@
 #' Calculate the distance of a flight trajectory from a flight path.
 #'
-#' @param trajectory A \code{flighttrajectory} object indicating the trajectory
-#'   of an aircraft.
-#' @param path A \code{flightpath} object indicating the ordered waypoints a
-#'   pre-defined flight path.
+#' @param trajectory A \code{flighttrajectory} object (or an object that can be
+#'   coerced into one) indicating the trajectory of an aircraft.
+#' @param path A \code{flightpath} object (or an object that can be coerced into
+#'   one) indicating the ordered waypoints a pre-defined flight path.
 #' @return A data.frame containing two columns representing the distance between
 #'   the aircraft and its planned flight path (in feet): \code{horizontal}
 #'   indicates the horizontal distance and \code{vertical} indicates the
@@ -12,8 +12,8 @@
 #' @export
 distanceFromPath <- function(trajectory, path) {
   # Check inputs and get 3D coordinates
-  trajectoryCoords <- get3dCoords(trajectory)
-  pathCoords <- get3dCoords(path)
+  trajectoryCoords <- get3dCoords(as.flighttrajectory(trajectory))
+  pathCoords <- get3dCoords(as.flightpath(path))
 
   numLegs <- nrow(pathCoords)-1
 

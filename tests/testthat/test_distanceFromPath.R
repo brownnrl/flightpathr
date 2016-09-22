@@ -32,12 +32,24 @@ test_that("non-deviating paths have small distances for all input types", {
   expect_equal(distanceFromPath(trajectory, path)$horizontal,
                rep(0, trajectoryLength),
                tolerance = 1)
-  # Leaving these here but commented-out. I'd like to be able to accept multiple
-  # input types again later, but it's a low priority.
 
-  # expect_true(all(distanceFromPath(cbind(trajectory, 3500), cbind(path, 3500)) < distancePrecision))
-  # expect_true(all(distanceFromPath(sp::SpatialPoints(trajectory), sp::SpatialPoints(path)) < distancePrecision))
-  # expect_true(all(distanceFromPath(as.data.frame(trajectory), as.data.frame(path)) < distancePrecision))
+  # data.frame
+  expect_equal(distanceFromPath(data.frame(trajectory$longitude, trajectory$latitude),
+                                data.frame(path$longitude, path$latitude))$horizontal,
+               rep(0, trajectoryLength),
+               tolerance = 1)
+
+  # matrix
+  expect_equal(distanceFromPath(cbind(trajectory$longitude, trajectory$latitude),
+                                cbind(path$longitude, path$latitude))$horizontal,
+               rep(0, trajectoryLength),
+               tolerance = 1)
+
+  # SpatialPoints
+  expect_equal(distanceFromPath(sp::SpatialPoints(cbind(trajectory$longitude, trajectory$latitude)),
+                                sp::SpatialPoints(cbind(path$longitude, path$latitude)))$horizontal,
+               rep(0, trajectoryLength),
+               tolerance = 1)
 })
 
 test_that("small horizontal deviations look OK", {
