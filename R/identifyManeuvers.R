@@ -12,16 +12,11 @@
 #'
 #' @export
 identifyBearingChanges <- function(trajectory, hiThresh) {
-  bearings <- coordsToBearing(trajectory)
+  bearings <- as.flighttrajectory(trajectory)$bearing
 
-  bearings[length(bearings)] <- bearings[length(bearings)-1]
-  bearingChanges <- c(diff(bearings), NA)
-
-  # Keep bearingChanges in the range [-180, 180]
-  bearingChanges[!is.na(bearingChanges) & bearingChanges < -180] <-
-    bearingChanges[!is.na(bearingChanges) & bearingChanges < -180] + 360
-  bearingChanges[!is.na(bearingChanges) & bearingChanges > 180] <-
-    bearingChanges[!is.na(bearingChanges) & bearingChanges > 180] - 360
+  bearingChanges <- c(angleDiff(bearings[1:(length(bearings)-1)],
+                                bearings[2:length(bearings)]),
+                      NA)
 
   isBearingChange <- abs(bearingChanges) > hiThresh
 
@@ -42,7 +37,7 @@ identifyBearingChanges <- function(trajectory, hiThresh) {
 #'
 #' @export
 identifyAltitudeChanges <- function(trajectory, hiThresh) {
-  trajectoryCoords <- get3dCoords(trajectory)
+  trajectoryCoords <- get3dCoords(as.flighttrajectory(trajectory))
   altitudeChanges <- c(diff(trajectoryCoords[, 3]), 0)
 
   isAltitudeChange <- abs(altitudeChanges) > hiThresh
