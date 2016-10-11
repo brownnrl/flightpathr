@@ -93,5 +93,6 @@ is.flighttrajectory <- function(x) inherits(x, "flighttrajectory")
 #' @method as.data.frame flighttrajectory
 #' @export
 as.data.frame.flighttrajectory <- function(x) {
-  return(as.data.frame(as.list(x)))
+  class(x) <- NULL
+  return(as.data.frame(x))
 }
