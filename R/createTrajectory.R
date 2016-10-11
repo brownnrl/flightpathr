@@ -88,3 +88,10 @@ createTrajectory <- function(longitude, latitude, altitude = 0, timestamp = NULL
 #' Check if an object is a flighttrajectory
 #' @export
 is.flighttrajectory <- function(x) inherits(x, "flighttrajectory")
+
+#' Convert a trajectory to a data.frame
+#' @method as.data.frame flighttrajectory
+#' @export
+as.data.frame.flighttrajectory <- function(x) {
+  return(as.data.frame(as.list(x)))
+}
