@@ -20,7 +20,11 @@ identifyBearingChanges <- function(trajectory, loThresh, hiThresh = NA) {
                                 t$bearing[2:length(t$bearing)])) /
     c(NA, diff(t$time))
 
-  isBearingChange <- abs(bearingChanges) > hiThresh
+  isBearingChange <- hysteresisThresh(bearingChanges, max(loThresh), max(hiThresh))
+  if (length(loThresh) > 1) {
+    isBearingChange <- isBearingChange |
+      hysteresisThresh(-bearingChanges, -min(loThresh), -min(hiThresh))
+  }
 
   return(isBearingChange)
 }
