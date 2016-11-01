@@ -81,40 +81,34 @@ identifySpeedChanges <- function(trajectory, loThresh, hiThresh = NA) {
   return(isSpeedChange)
 }
 
-#' Helper function for hysteresis thresholding: if a group of neighboring
-#' segments are all above the low threshold and neighbor a segment above the
-#' high threshold, they're "above threshold".
-hysteresisThresh <- function(x, lo, hi = NA) {
-  # Reduces to simple thresholding when a hi threshold isn't specified
-  if (is.na(hi)) {
-    hi = lo
+#' Helper function for identifying changes based on change magnitude and change
+#' slope.
+identifyChanges <- function(x, dx, xThresh, dxThresh) {
+  # First apply the threshold to the derivative (w.r.t. time) to identify
+  # periods that may contain valid changes.
+  aboveThresh <- abs(dx) > dxThresh
+  aboveThresh[is.na(aboveThresh)] <- FALSE
+
+  # Find the point before and after each of the change periods
+  threshEdges <- diff(c(FALSE, aboveThresh, FALSE))
+  regionStart <- which(threshEdges > 0) - 1
+  regionEnd <- which(threshEdges < 0)
+
+  # Deal with regions that start or end at the ends of the vector
+  regionStart[1] <- max(regionStart[1], 1)
+  regionEnd[length(regionEnd)] <- min(regionEnd[length(regionEnd)],
+                                      length(dx))
+
+  # Find the magnitude of the change in each region
+  changeMagnitude <- x[regionEnd] - x[regionStart]
+
+  # Censor the changes that aren't above the threshold
+  censorChanges <- which(abs(changeMagnitude) < xThresh)
+
+  # Loop through the changes and censor them
+  for (i in seq_along(censorChanges)) {
+    aboveThresh[regionStart[i]:regionEnd[i]] <- FALSE
   }
-
-  aboveThresh <- abs(x) > hi
-
-  ## Having trouble with thresholding for this analysis. Giving up for now. I
-  ## apologize to all of the user of this package.
-
-  # x <- abs(x)
-  #
-  # # Find the beginning and end of all the regions above the low threshold
-  # threshEdges <- diff(c(FALSE, x > lo, FALSE))
-  # regionStart <- which(threshEdges > 0)
-  # regionEnd <- which(threshEdges < 0) - 1
-  #
-  # # If the sequence ends with a low-threshold region, make sure to capture the
-  # # endpoint.
-  # if (length(regionEnd) < length(regionStart)) {
-  #   regionEnd[length(regionStart)] <- length(x)
-  # }
-  #
-  # # For each region, set to TRUE iff anything inside is above the high threshold
-  # aboveThresh <- rep(FALSE, length(x))
-  # for (i in seq_along(regionStart)) {
-  #   if (any(x[regionStart[i]:regionEnd[i]] > hi)) {
-  #     aboveThresh[regionStart[i]:regionEnd[i]] <- TRUE
-  #   }
-  # }
 
   return(aboveThresh)
 }
