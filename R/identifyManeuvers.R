@@ -96,8 +96,8 @@ identifyChanges <- function(x, dx, xThresh, dxThresh) {
   # Censor the changes that aren't above the threshold
   censorChanges <- which(abs(changeMagnitude) < xThresh)
 
-  # Loop through the changes and censor them
-  for (i in seq_along(censorChanges)) {
+  # Loop through the below-threshold changes and censor them
+  for (i in censorChanges) {
     aboveThresh[regionStart[i]:regionEnd[i]] <- FALSE
   }
 
