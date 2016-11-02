@@ -3,24 +3,24 @@
 \name{identifySpeedChanges}
 \alias{identifySpeedChanges}
 \title{Identify the timepoints in a trajectory that correspond to a change in
-altitude.}
+speed.}
 \usage{
-identifySpeedChanges(trajectory, loThresh, hiThresh = NA)
+identifySpeedChanges(trajectory, speedThresh, accelerationThresh)
 }
 \arguments{
 \item{trajectory}{A \code{flighttrajectory} object (or input coercable to
 one) indicating the trajectory of an aircraft.}
 
-\item{hiThresh}{An altitude change (in feet per second); any time point
-associated with a change in altitude greater than this value will
-definitely be labeled a climb or descent.}
+\item{speedThresh}{A speed threshold (in knots).}
+
+\item{accelerationThresh}{An accelaration threshold (in knots per second).}
 }
 \value{
 A logical vector indicating whether each timepoint can be considered
-  a climb or descent.
+  a change in speed
 }
 \description{
 Identify the timepoints in a trajectory that correspond to a change in
-altitude.
+speed.
 }
 

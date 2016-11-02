@@ -5,15 +5,15 @@
 \title{Identify the timepoints in a trajectory that correspond to a change in
 altitude.}
 \usage{
-identifyAltitudeChanges(trajectory, loThresh, hiThresh = NA)
+identifyAltitudeChanges(trajectory, altitudeThresh, verticalSpeedThresh)
 }
 \arguments{
 \item{trajectory}{A \code{flighttrajectory} object (or input coercable to
 one) indicating the trajectory of an aircraft.}
 
-\item{hiThresh}{An altitude change (in feet per second); any time point
-associated with a change in altitude greater than this value will
-definitely be labeled a climb or descent.}
+\item{altitudeThresh}{An altitude threshold (in feet).}
+
+\item{verticalSpeedThresh}{A vertical speed threshold (in feet per second).}
 }
 \value{
 A logical vector indicating whether each timepoint can be considered

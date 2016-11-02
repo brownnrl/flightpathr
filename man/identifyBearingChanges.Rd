@@ -5,17 +5,15 @@
 \title{Identify the timepoints in a trajectory that correspond to a change in
 commanded heading.}
 \usage{
-identifyBearingChanges(trajectory, loThresh, hiThresh = NA)
+identifyBearingChanges(trajectory, bearingThresh, turnThresh)
 }
 \arguments{
 \item{trajectory}{A \code{flighttrajectory} object (or input coercable to
 one) indicating the trajectory of an aircraft.}
 
-\item{loThresh}{A bearing change (in degrees per second)}
+\item{bearingThresh}{A bearing change threshold (in degrees).}
 
-\item{hiThresh}{A bearing change (in degrees per second); any time point
-associated with a change in bearing greater than this value will definitely
-be labeled a turn.}
+\item{turnThresh}{A turn rate threshold (in degrees per second).}
 }
 \value{
 A logical vector indicating whether each timepoint can be considered
@@ -24,5 +22,10 @@ A logical vector indicating whether each timepoint can be considered
 \description{
 Identify the timepoints in a trajectory that correspond to a change in
 commanded heading.
+}
+\details{
+A period is marked as a turn if the turn rate is greater than
+  \code{turnThresh} and the total bearing change is greater than
+  \code{bearingThresh}.
 }
 
